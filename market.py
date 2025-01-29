@@ -1,17 +1,11 @@
-import http.client
-import ssl
+from requests import get_request
 
-context = ssl._create_unverified_context()
-
-conn = http.client.HTTPSConnection("open.bymadata.com.ar", context=context)
+MARKET_OPEN_URL = "/vanoms-be-core/rest/api/bymadata/free/market-open"
 
 def get_market_status():
-    conn.request("GET", "/vanoms-be-core/rest/api/bymadata/free/market-open")
-    res = conn.getresponse()
-    data = res.read()
+    data = get_request(MARKET_OPEN_URL)
     result = True
     print(data)
     if data == b'false':
-        result  = False
-    conn.close()
+        result = False
     return result

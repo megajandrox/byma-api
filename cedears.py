@@ -1,10 +1,6 @@
-import http.client
 import json
-import ssl
+from requests import post_request
 
-context = ssl._create_unverified_context()
-
-conn = http.client.HTTPSConnection("open.bymadata.com.ar", context=context)
 payload = json.dumps({
     "excludeZeroPxAndQty": True,
     "T1": True,
@@ -17,11 +13,8 @@ headers = {
     'Expires': 1,
     'Options': 'renta-variable',
 }
-
+CEDEARS_URL = "/vanoms-be-core/rest/api/bymadata/free/cedears"
 
 def get_cedears_data():
-    conn.request("POST", "/vanoms-be-core/rest/api/bymadata/free/cedears", payload, headers)
-    res = conn.getresponse()
-    data = res.read()
-    conn.close()
+    data = post_request(CEDEARS_URL, payload, headers)
     return json.loads(data)
