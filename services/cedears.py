@@ -34,7 +34,7 @@ def get_cedears_data():
     # Store in cache only if data is not empty
     if json_data:
         print("Storing new data in cache")
-        cache.set(CEDEARS_LAST_CACHE, json_data, expire=600)    # 10-minute expiration
+        cache.set(CEDEARS_LAST_CACHE, json_data, expire=500)    # 10-minute expiration
         cache.set(CEDEARS_LONG_CACHE, json_data, expire=172800) # 48-hours expiration
     else:
         print("No new data available")
