@@ -1,4 +1,5 @@
 import json
+import os
 from requests import post_request
 import diskcache as dc
 
@@ -19,8 +20,14 @@ headers = {
 CEDEARS_URL = "/vanoms-be-core/rest/api/bymadata/free/cedears"
 CEDEARS_LAST_CACHE = "CEDEARS_LOW_CACHE"
 CEDEARS_LONG_CACHE = "CEDEARS_LONG_CACHE"
+# Get environment variables
+EXPIRATION_CACHE = int(os.getenv("EXPIRATION_CACHE", 500))  # Default to 500 if not set
+EXPIRATION_LONG_CACHE = int(os.getenv("EXPIRATION_LONG_CACHE", 172800))  # Default to 172800 if not set
+print(f"EXPIRATION_CACHE: {EXPIRATION_CACHE}")
+print(f"EXPIRATION_LONG_CACHE: {EXPIRATION_LONG_CACHE}")
 
 def get_cedears_data():
+    print("Getting CEDEARS data...")
     cached_data = cache.get(CEDEARS_LAST_CACHE)
 
     if cached_data:
@@ -34,8 +41,8 @@ def get_cedears_data():
     # Store in cache only if data is not empty
     if json_data:
         print("Storing new data in cache")
-        cache.set(CEDEARS_LAST_CACHE, json_data, expire=500)    # 10-minute expiration
-        cache.set(CEDEARS_LONG_CACHE, json_data, expire=172800) # 48-hours expiration
+        cache.set(CEDEARS_LAST_CACHE, json_data, expire=EXPIRATION_CACHE)    # 10-minute expiration
+        cache.set(CEDEARS_LONG_CACHE, json_data, expire=EXPIRATION_LONG_CACHE) # 48-hours expiration
     else:
         print("No new data available")
         cached_data = cache.get(CEDEARS_LONG_CACHE)
