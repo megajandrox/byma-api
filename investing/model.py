@@ -1,9 +1,8 @@
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Float
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
 
 # Define the SQLite database file
-DATABASE_URL = "sqlite:///investing2.db"
+DATABASE_URL = "sqlite:///investing.db"
 
 # Create the engine
 def get_engine():

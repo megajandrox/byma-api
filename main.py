@@ -11,7 +11,7 @@ from services.cedears import get_cedears_data
 from services.market import get_market_status
 from investing.daos import InvestingDAO
 from services.investing import InvestingService
-DATABASE_URL = "sqlite:///investing2.db"
+DATABASE_URL = "sqlite:///investing.db"
 engine = create_engine(DATABASE_URL, echo=True)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
