@@ -5,11 +5,10 @@ import urllib3
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base
 
 from services.cedears import get_cedears_data
 from services.market import get_market_status
-from investing.daos import InvestingDAO
+from daos.investing_daos import InvestingDAO
 from services.investing import InvestingService
 DATABASE_URL = "sqlite:///investing.db"
 engine = create_engine(DATABASE_URL, echo=True)
@@ -91,7 +90,7 @@ def update_investment(investment_id: int, investment: InvestmentUpdate):
         )
         if not updated_investment:
             raise HTTPException(status_code=404, detail="Investment not found")
-        return {"message": "Investment updated successfully", "investment_id": updated_investment.id}
+        return {"message": "Investment updated successfully", "investment_id": updated_investment}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
