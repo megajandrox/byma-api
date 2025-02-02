@@ -1,5 +1,6 @@
 from datetime import datetime  # Fix: Import datetime correctly
 from typing import Optional
+from fastapi.middleware.cors import CORSMiddleware
 
 import urllib3
 from fastapi import FastAPI, HTTPException
@@ -35,7 +36,14 @@ class InvestmentUpdate(BaseModel):
 
 # Create the FastAPI app
 app = FastAPI()
-
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 # Define endpoints
 @app.get("/byma-api/cedears")
 def get_cedears():
