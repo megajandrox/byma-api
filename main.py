@@ -20,9 +20,7 @@ investing_service = InvestingService(investing_dao)
 # Create the FastAPI app
 app = FastAPI()
 origins = [
-    "http://localhost:3000",
-    "null",
-    "*"
+    "http://localhost:3000"
 ]
 # Add CORS middleware
 app.add_middleware(
