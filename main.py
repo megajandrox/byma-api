@@ -1,11 +1,11 @@
 from datetime import datetime  # Fix: Import datetime correctly
 from typing import Optional
-from fastapi.middleware.cors import CORSMiddleware
 
 import urllib3
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import create_engine
+from fastapi.middleware.cors import CORSMiddleware
 
 from services.cedears import get_cedears_data
 from services.market import get_market_status
