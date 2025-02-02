@@ -1,12 +1,9 @@
-from datetime import datetime  # Fix: Import datetime correctly
-from typing import Optional
-
 import urllib3
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
 from sqlalchemy import create_engine
 from fastapi.middleware.cors import CORSMiddleware
 
+from dtos.dtos import InvestmentCreate, SummaryInvestment, InvestmentUpdate
 from services.cedears import get_cedears_data
 from services.market import get_market_status
 from daos.investing_daos import InvestingDAO
@@ -18,21 +15,6 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # Initialize DAO and Service
 investing_dao = InvestingDAO(engine)
 investing_service = InvestingService(investing_dao)
-
-# Define Pydantic models for request/response validation
-class InvestmentCreate(BaseModel):
-    symbol: str
-    initial_date: datetime  # Fix: Use datetime.datetime
-    amount: float
-    initial_price: float
-    qty: int
-
-class InvestmentUpdate(BaseModel):
-    symbol: Optional[str] = None
-    initial_date: Optional[datetime] = None  # Fix: Use datetime.datetime
-    amount: Optional[float] = None
-    initial_price: Optional[float] = None
-    qty: Optional[int] = None
 
 # Create the FastAPI app
 app = FastAPI()
@@ -48,7 +30,7 @@ app.add_middleware(
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
 )
-# Define endpoints
+
 @app.get("/byma-api/cedears")
 def get_cedears():
     data = get_cedears_data()
@@ -58,7 +40,7 @@ def get_cedears():
 def check_market_is_open():
     result = get_market_status()
     return result
-# Define endpoints
+
 @app.post("/byma-api/investments/")
 def create_investment(investment: InvestmentCreate):
     """Create a new investment."""
@@ -87,6 +69,30 @@ def get_all_investments():
     """Retrieve all investments."""
     investments = investing_service.get_all_investments()
     return investments
+
+@app.get("/byma-api/summary_investments/")
+def get_summary_investments():
+    """Retrieve all investments."""
+    cedears = get_cedears_data()
+    investments = investing_service.get_all_investments()
+    summary_investments = []
+    total_investment = 0.0
+    for investment in investments:
+        total_investment = total_investment + investment.amount
+        cedear = next((inv for inv in cedears if inv["symbol"] == investment.symbol), None)
+        if cedear:
+            summary_investment = SummaryInvestment( investment_id= investment.id,
+                                                    symbol=investment.symbol,
+                                                    initial_date=investment.initial_date,
+                                                    amount=investment.amount,
+                                                    initial_price=investment.initial_price,
+                                                    qty=investment.qty,
+                                                    current_price=cedear["trade"],
+                                                    revenue=(cedear["trade"] * investment.qty) - investment.amount)
+            summary_investments.append(summary_investment)
+    for summary_investment in summary_investments:
+        summary_investment.set_porc_invested((summary_investment.amount / total_investment) * 100)
+    return summary_investments
 
 @app.put("/byma-api/investments/{investment_id}")
 def update_investment(investment_id: int, investment: InvestmentUpdate):

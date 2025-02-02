@@ -5,19 +5,17 @@ const MarketData = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     useEffect(() => {
-        // Replace with your actual API endpoint
-        const apiUrl = 'http://byma-api.onrender.com/byma-api/investments/';
+        const apiUrl = 'https://byma-api.onrender.com/byma-api/investments/';
 
-        // Using fetch
         fetch(apiUrl)
             .then(response => {
-                console.log(response);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
             .then(data => {
+                console.log(data);
                 setData(data);
                 setLoading(false);
             })
@@ -49,11 +47,11 @@ const MarketData = () => {
                     {data.map((row, index) => (
                         <tr key={index}>
                             <td>{row.symbol}</td>
-                            <td>{row.initialDate}</td>
+                            <td>{row.initial_date}</td>
                             <td>{row.percentInvested}</td>
-                            <td>{row.initialInvestment}</td>
-                            <td>{row.price}</td>
-                            <td>{row.quantity}</td>
+                            <td>{row.amount}</td>
+                            <td>{row.initial_price}</td>
+                            <td>{row.qty}</td>
                             <td>{row.currentPrice}</td>
                             <td>{row.revenue}</td>
                         </tr>
