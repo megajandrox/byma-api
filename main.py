@@ -37,15 +37,13 @@ class InvestmentUpdate(BaseModel):
 # Create the FastAPI app
 app = FastAPI()
 origins = [
-    "http://localhost",  # Allows requests from localhost (for development)
-    "http://localhost:8080",  # Allows requests from localhost on port 8080
-    "https://your-frontend-domain.com",  # Replace with your actual frontend domain
+    "http://localhost:3000",
+    "null"
 ]
-
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Allows all origins
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
