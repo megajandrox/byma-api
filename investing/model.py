@@ -1,8 +1,7 @@
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Float
 from sqlalchemy.ext.declarative import declarative_base
 
-# Define the SQLite database file
-DATABASE_URL = "sqlite:///investing.db"
+from parameters import DATABASE_URL
 
 # Create the engine
 def get_engine():
@@ -26,5 +25,3 @@ class InvestingModel(Base):
 def create_table():
     engine = get_engine()
     Base.metadata.create_all(engine)
-
-create_table()

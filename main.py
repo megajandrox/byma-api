@@ -4,11 +4,12 @@ from sqlalchemy import create_engine
 from fastapi.middleware.cors import CORSMiddleware
 
 from dtos.dtos import InvestmentCreate, SummaryInvestment, InvestmentUpdate
+from parameters import DATABASE_URL
 from services.cedears import get_cedears_data
 from services.market import get_market_status
 from daos.investing_daos import InvestingDAO
 from services.investing import InvestingService
-DATABASE_URL = "sqlite:///investing.db"
+
 engine = create_engine(DATABASE_URL, echo=True)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -20,7 +21,8 @@ investing_service = InvestingService(investing_dao)
 app = FastAPI()
 origins = [
     "http://localhost:3000",
-    "null"
+    "null",
+    "*"
 ]
 # Add CORS middleware
 app.add_middleware(

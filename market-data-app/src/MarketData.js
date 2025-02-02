@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import DataCell from './components/DataCell';
+import AlignedCell from './components/AlignedCell';
 
 const MarketData = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     useEffect(() => {
-        const apiUrl = 'https://byma-api.onrender.com/byma-api/investments/';
+        const apiUrl = 'https://byma-api.onrender.com/byma-api/summary_investments/';
 
         fetch(apiUrl)
             .then(response => {
@@ -45,16 +47,32 @@ const MarketData = () => {
                 </thead>
                 <tbody>
                     {data.map((row, index) => (
-                        <tr key={index}>
-                            <td>{row.symbol}</td>
-                            <td>{row.initial_date}</td>
-                            <td>{row.percentInvested}</td>
-                            <td>{row.amount}</td>
-                            <td>{row.initial_price}</td>
-                            <td>{row.qty}</td>
-                            <td>{row.currentPrice}</td>
-                            <td>{row.revenue}</td>
-                        </tr>
+                        <tr key={row.investment_id}>
+                            <AlignedCell alignment="center">
+                                <DataCell value={row.symbol} />
+                            </AlignedCell>
+                            <AlignedCell alignment="center">
+                                <DataCell value={row.initial_date} type="date" />
+                            </AlignedCell>
+                            <AlignedCell alignment="center">
+                                <DataCell value={row.porc_invested} type="percentage" />
+                            </AlignedCell>
+                            <AlignedCell alignment="right">
+                                <DataCell value={row.amount} type="currency" />
+                            </AlignedCell>
+                            <AlignedCell alignment="right">
+                                <DataCell value={row.initial_price} type="currency" />
+                            </AlignedCell>
+                            <AlignedCell alignment="center">
+                                <DataCell value={row.qty} />
+                            </AlignedCell>
+                            <AlignedCell alignment="right">
+                                <DataCell value={row.current_price} type="currency" />
+                            </AlignedCell>
+                            <AlignedCell alignment="right">
+                                <DataCell value={row.revenue} type="currency" />
+                            </AlignedCell>
+                      </tr>
                     ))}
                 </tbody>
             </table>
