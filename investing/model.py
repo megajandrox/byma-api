@@ -19,9 +19,3 @@ class InvestingModel(Base):
     amount = Column(Float)
     initial_price = Column(Float)
     qty = Column(Integer)
-
-
-# Create the table in the database
-def create_table():
-    engine = get_engine()
-    Base.metadata.create_all(engine)

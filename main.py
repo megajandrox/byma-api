@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 from fastapi.middleware.cors import CORSMiddleware
 
 from dtos.dtos import InvestmentCreate, SummaryInvestment, InvestmentUpdate
+from investing.model import Base
 from parameters import DATABASE_URL
 from services.cedears import get_cedears_data
 from services.market import get_market_status
@@ -123,4 +124,5 @@ def delete_investment(investment_id: int):
 # Run the application
 if __name__ == "__main__":
     import uvicorn
+    Base.metadata.create_all(engine)
     uvicorn.run(app, host="0.0.0.0", port=8000)
