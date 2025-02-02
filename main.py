@@ -71,6 +71,14 @@ def get_all_investments():
     investments = investing_service.get_all_investments()
     return investments
 
+@app.get("/byma-api/schema/")
+def get_schema_db():
+    """Retrieve all investments."""
+    Base.metadata.create_all(engine)
+    print("Schema has been created")
+    investments = investing_service.get_all_investments()
+    return investments
+
 @app.get("/byma-api/summary_investments/")
 def get_summary_investments():
     """Retrieve all investments."""
