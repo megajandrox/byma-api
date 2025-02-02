@@ -6,7 +6,7 @@ from investing.model import InvestingModel
 class InvestingDAO:
     def __init__(self, engine):
         # Create a session factory bound to the engine
-        self.Session = sessionmaker(bind=engine)
+        self.Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
     def create_investment(self, symbol, initial_date, amount, initial_price, qty):
         """Create a new investment."""
@@ -64,6 +64,7 @@ class InvestingDAO:
                 if qty:
                     investment.qty = qty
                 session.commit()
+                session.refresh(investment)
             return investment
         except Exception as e:
             session.rollback()
@@ -79,6 +80,7 @@ class InvestingDAO:
             if investment:
                 session.delete(investment)
                 session.commit()
+                session.refresh(investment)
                 return True
             return False
         except Exception as e:
