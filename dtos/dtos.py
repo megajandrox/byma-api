@@ -1,14 +1,19 @@
 from datetime import datetime  # Fix: Import datetime correctly
 from typing import Optional
 from pydantic import BaseModel
+from typing_extensions import List
 
-# Define Pydantic models for request/response validation
+
 class InvestmentCreate(BaseModel):
     symbol: str
     initial_date: datetime  # Fix: Use datetime.datetime
     amount: float
     initial_price: float
     qty: int
+
+# Define Pydantic models for request/response validation
+class BulkInvestmentCreation(BaseModel):
+    investments: List[InvestmentCreate]
 
 class InvestmentUpdate(BaseModel):
     symbol: Optional[str] = None

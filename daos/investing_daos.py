@@ -1,12 +1,28 @@
-from sqlalchemy.orm import sessionmaker
-
-from investing.model import InvestingModel
-
+from sqlalchemy.orm import Session
+from investing.model import InvestingModel  # Import your SQLAlchemy model
 
 class InvestingDAO:
     def __init__(self, engine):
-        # Create a session factory bound to the engine
-        self.Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+        self.engine = engine
+
+    def bulk_create_investment(self, investments):
+        with Session(self.engine) as session:
+            try:
+                # Convert Pydantic models to SQLAlchemy models
+                db_investments = [
+                    InvestingModel(
+                        symbol=inv.symbol,
+                        initial_date=inv.initial_date,
+                        amount=inv.amount,
+                        initial_price=inv.initial_price,
+                        qty=inv.qty
+                    ) for inv in investments
+                ]
+                session.add_all(db_investments)
+                session.commit()
+            except Exception as e:
+                session.rollback()
+                raise e
 
     def create_investment(self, symbol, initial_date, amount, initial_price, qty):
         """Create a new investment."""

@@ -10,6 +10,11 @@ class InvestingService:
         investment_id = self.investing_dao.create_investment(symbol, initial_date, amount, initial_price, qty)
         return investment_id
 
+    def bulk_create_investments(self, investments):
+        """Create multiple new investments in a single transaction."""
+        self.investing_dao.bulk_create_investment(investments)
+        return len(investments)
+
     def get_investment_by_id(self, investment_id):
         """Retrieve an investment by its ID."""
         return self.investing_dao.get_investment_by_id(investment_id)

@@ -1,7 +1,8 @@
 import os
 
 # 1. Get the environment variable (with a default value):
-DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///investing.db")
+#DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///investing.db")
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://admin:admin123@localhost:5432/postgres")
 
 # Explanation:
 # os.environ.get("DATABASE_URL", "sqlite:///investing.db") tries to retrieve the value of the

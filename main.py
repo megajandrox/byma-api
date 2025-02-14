@@ -1,9 +1,12 @@
 import urllib3
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
 from sqlalchemy import create_engine
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import ValidationError
+import logging
 
-from dtos.dtos import InvestmentCreate, SummaryInvestment, InvestmentUpdate
+from dtos.dtos import InvestmentCreate, SummaryInvestment, InvestmentUpdate, BulkInvestmentCreation
 from investing.model import Base
 from parameters import DATABASE_URL
 from services.cedears import get_cedears_data
@@ -23,6 +26,16 @@ app = FastAPI()
 origins = [
     "http://localhost:3000"
 ]
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+@app.exception_handler(ValidationError)
+async def validation_exception_handler(request: Request, exc: ValidationError):
+    return JSONResponse(
+        status_code=422,
+        content={"detail": exc.errors()}
+    )
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -56,6 +69,20 @@ def create_investment(investment: InvestmentCreate):
         return {"message": "Investment created successfully", "investment_id": new_investment}
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/byma-api/bulk/investments/")
+async def bulk_create_investment(investments: BulkInvestmentCreation):
+    """Create multiple new investments in a single transaction."""
+    try:
+        num_investments = investing_service.bulk_create_investments(investments.investments)
+        return {"message": f"{num_investments} investments created successfully"}
+    except ValueError as e:
+        logger.error(f"ValueError in bulk_create_investment: {str(e)}")
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Unexpected error in bulk_create_investment: {str(e)}")
+        raise HTTPException(status_code=500, detail="An unexpected error occurred")
+
 
 @app.get("/byma-api/investments/{investment_id}")
 def get_investment(investment_id: int):
