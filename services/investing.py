@@ -1,6 +1,3 @@
-from datetime import datetime
-
-
 class InvestingService:
     def __init__(self, investing_dao):
         self.investing_dao = investing_dao

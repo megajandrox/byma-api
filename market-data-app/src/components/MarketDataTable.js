@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import DataCell from './components/DataCell';
-import AlignedCell from './components/AlignedCell';
+import DataCell from './DataCell';
+import AlignedCell from './AlignedCell';
 
-const MarketData = () => {
+const MarketDataTable = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showForm, setShowForm] = useState(false);
+    const [newInvestment, setNewInvestment] = useState({
+        symbol: '',
+        initial_date: new Date(),
+        amount: 0.0,
+        qty: 0
+    });
+
     useEffect(() => {
-        const apiUrl = 'https://byma-api.onrender.com/byma-api/summary_investments/';
+        const apiUrl = process.env.REACT_APP_API_URL || 'https://byma-api.onrender.com/byma-api/summary_investments/';
 
         fetch(apiUrl)
             .then(response => {
@@ -26,12 +34,37 @@ const MarketData = () => {
                 setLoading(false);
             });
     }, []);
+
+    const handleChange = (e) => {
+        setNewInvestment({ ...newInvestment, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setData([...data, { ...newInvestment, investment_id: Date.now() }]);
+        setShowForm(false);
+    };
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
 
     return (
         <div>
-            <h1>Market Data</h1>
+            <h1>Mega Investment</h1>
+            <button onClick={() => setShowForm(true)}>Add Investment</button>
+            {showForm && (
+                <div>
+                    <h2>New Investment</h2>
+                    <form onSubmit={handleSubmit}>
+                        <input type="text" name="symbol" placeholder="Symbol" onChange={handleChange} required />
+                        <input type="date" name="initial_date" onChange={handleChange} required />
+                        <input type="number" name="amount" placeholder="Initial Investment" onChange={handleChange} required />
+                        <input type="number" name="qty" placeholder="Quantity" onChange={handleChange} required />
+                        <button type="submit">Save</button>
+                        <button type="button" onClick={() => setShowForm(false)}>Cancel</button>
+                    </form>
+                </div>
+            )}
             <table>
                 <thead>
                     <tr>
@@ -43,6 +76,7 @@ const MarketData = () => {
                         <th>Quantity</th>
                         <th>Current Price</th>
                         <th>Revenue</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -72,6 +106,10 @@ const MarketData = () => {
                             <AlignedCell alignment="right">
                                 <DataCell value={row.revenue} type="currency" />
                             </AlignedCell>
+                            <AlignedCell alignment="center">
+                                <button onClick={() => console.log('Update', row)}>Update</button>
+                                <button onClick={() => console.log('Delete', row)}>Delete</button>
+                            </AlignedCell>
                       </tr>
                     ))}
                 </tbody>
@@ -80,4 +118,4 @@ const MarketData = () => {
     );
 };
 
-export default MarketData;
+export default MarketDataTable;

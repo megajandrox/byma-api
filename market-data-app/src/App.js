@@ -1,11 +1,11 @@
 import React from 'react';
-import MarketData from './MarketData';
+import MarketDataTable from './components/MarketDataTable';
 import './App.css';
 
 function App() {
     return (
         <div className="App">
-            <MarketData />
+            <MarketDataTable />
         </div>
     );
 }
