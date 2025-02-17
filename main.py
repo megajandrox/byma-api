@@ -6,7 +6,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import ValidationError
 import logging
 
-from dtos.dtos import InvestmentCreate, SummaryInvestment, InvestmentUpdate, BulkInvestmentCreation
+from dtos.dtos import InvestmentCreate, SummaryInvestment, InvestmentUpdate, BulkInvestmentCreation, \
+    SummaryInvestmentResponse
 from investing.model import Base
 from parameters import DATABASE_URL
 from services.cedears import get_cedears_data
@@ -112,23 +113,36 @@ def get_summary_investments():
     cedears = get_cedears_data()
     investments = investing_service.get_all_investments()
     summary_investments = []
-    total_investment = 0.0
+    total_invested = 0.0
+    total_initial_investment = 0.0
+    total_revenue = 0.0
+
     for investment in investments:
-        total_investment = total_investment + investment.amount
+        total_initial_investment += investment.amount
         cedear = next((inv for inv in cedears if inv["symbol"] == investment.symbol), None)
         if cedear:
-            summary_investment = SummaryInvestment( investment_id= investment.id,
-                                                    symbol=investment.symbol,
-                                                    initial_date=investment.initial_date,
-                                                    amount=investment.amount,
-                                                    initial_price=investment.initial_price,
-                                                    qty=investment.qty,
-                                                    current_price=cedear["trade"],
-                                                    revenue=(cedear["trade"] * investment.qty) - investment.amount)
+            current_value = cedear["trade"] * investment.qty
+            revenue = current_value - investment.amount
+            summary_investment = SummaryInvestment(
+                investment_id= investment.id,
+                symbol=investment.symbol,
+                initial_date=investment.initial_date,
+                amount=investment.amount,
+                initial_price=investment.initial_price,
+                qty=investment.qty,
+                current_price=cedear["trade"],
+                revenue=revenue)
             summary_investments.append(summary_investment)
+            total_invested += current_value
+            total_revenue += revenue
     for summary_investment in summary_investments:
-        summary_investment.set_porc_invested((summary_investment.amount / total_investment) * 100)
-    return summary_investments
+        summary_investment.porc_invested = (summary_investment.amount / total_initial_investment) * 100
+    return SummaryInvestmentResponse(
+        investments=summary_investments,
+        total_invested=total_invested,
+        total_initial_investment=total_initial_investment,
+        total_revenue=total_revenue
+    )
 
 @app.put("/byma-api/investments/{investment_id}")
 def update_investment(investment_id: int, investment: InvestmentUpdate):

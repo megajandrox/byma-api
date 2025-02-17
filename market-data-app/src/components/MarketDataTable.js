@@ -3,7 +3,12 @@ import DataCell from './DataCell';
 import AlignedCell from './AlignedCell';
 
 const MarketDataTable = () => {
-    const [data, setData] = useState([]);
+    const [data, setData] = useState({
+        investments: [],
+        total_invested: 0,
+        total_initial_investment: 0,
+        total_revenue: 0
+    });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showForm, setShowForm] = useState(false);
@@ -80,7 +85,7 @@ const MarketDataTable = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((row, index) => (
+                    {data.investments.map((row, index) => (
                         <tr key={row.investment_id}>
                             <AlignedCell alignment="center">
                                 <DataCell value={row.symbol} />
@@ -114,6 +119,25 @@ const MarketDataTable = () => {
                     ))}
                 </tbody>
             </table>
+            <div>
+                <h2>Summary</h2>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Total Invested:</td>
+                            <td><DataCell value={data.total_invested} type="currency" /></td>
+                        </tr>
+                        <tr>
+                            <td>Total Initial Investment:</td>
+                            <td><DataCell value={data.total_initial_investment} type="currency" /></td>
+                        </tr>
+                        <tr>
+                            <td>Total Revenue:</td>
+                            <td><DataCell value={data.total_revenue} type="currency" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };

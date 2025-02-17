@@ -1,8 +1,6 @@
-from datetime import datetime  # Fix: Import datetime correctly
-from typing import Optional
+from datetime import datetime
+from typing import Optional, List
 from pydantic import BaseModel
-from typing_extensions import List
-
 
 class InvestmentCreate(BaseModel):
     symbol: str
@@ -22,18 +20,20 @@ class InvestmentUpdate(BaseModel):
     initial_price: Optional[float] = None
     qty: Optional[int] = None
 
-class SummaryInvestment:
-    def __init__(self ,investment_id, symbol, initial_date, amount, initial_price, qty, current_price, revenue):
-        self.investment_id = investment_id
-        self.symbol = symbol
-        self.initial_date = initial_date
-        self.amount = amount
-        self.initial_price = initial_price
-        self.qty = qty
-        self.current_price = current_price
-        self.revenue = revenue
-        self.porc_invested = 0.0
+class SummaryInvestment(BaseModel):
+    investment_id: int
+    symbol: str
+    initial_date: datetime
+    amount: float
+    initial_price: float
+    qty: int
+    current_price: float
+    revenue: float
+    porc_invested: float = 0.0
 
-    def set_porc_invested(self, value) :
-        self.porc_invested = value
+class SummaryInvestmentResponse(BaseModel):
+    investments: List[SummaryInvestment]
+    total_invested: float
+    total_initial_investment: float
+    total_revenue: float
 
