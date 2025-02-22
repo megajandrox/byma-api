@@ -96,7 +96,6 @@ class InvestingDAO:
                 if investment:
                     session.delete(investment)
                     session.commit()
-                    session.refresh(investment)
                     return True
                 return False
             except Exception as e:

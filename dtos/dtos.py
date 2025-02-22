@@ -36,4 +36,3 @@ class SummaryInvestmentResponse(BaseModel):
     total_invested: float
     total_initial_investment: float
     total_revenue: float
-
