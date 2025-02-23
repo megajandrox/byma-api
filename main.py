@@ -9,6 +9,7 @@ from logger.api_logger import logger
 from routers.byma import router as byma_router
 from routers.cedears import router as cedears_router
 from routers.investment import router as investment_router
+from routers.ccl import router as ccl_router  # Add this line
 
 # Create the FastAPI app
 app = FastAPI()
@@ -27,6 +28,7 @@ async def validation_exception_handler(request: Request, exc: ValidationError):
         status_code=422,
         content={"detail": exc.errors()}
     )
+
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -39,6 +41,8 @@ app.add_middleware(
 app.include_router(cedears_router, prefix="/byma-api")
 app.include_router(byma_router, prefix="/byma-api")
 app.include_router(investment_router, prefix="/byma-api")
+app.include_router(ccl_router, prefix="/byma-api")
+
 # Run the application
 if __name__ == "__main__":
     import uvicorn

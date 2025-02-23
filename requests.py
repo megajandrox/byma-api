@@ -1,4 +1,8 @@
+from fastapi import HTTPException
+
 from connection import get_connection
+from logger.api_logger import logger
+
 
 def post_request(url, payload, headers):
     conn = None
@@ -16,6 +20,9 @@ def post_request(url, payload, headers):
         # If status code is 200, read and return the data
         data = res.read()
         return data
+    except Exception as e:
+        logger.error(f'Error executing request: {str(e)}')
+        raise HTTPException(status_code=500, detail=f"Error Post Connection: {str(e)}")
     finally:
         # Ensure the connection is closed, even if an exception occurs
         if conn:
