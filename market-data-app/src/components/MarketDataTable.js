@@ -2,6 +2,13 @@ import React, { useEffect, useState } from 'react';
 import DataCell from './DataCell';
 import AlignedCell from './AlignedCell';
 
+const SUB_DOMAIN = 'byma-api';
+
+// Load environment variables from.env file
+const environment = {
+    base_api_url: `${process.env.REACT_APP_BASE_API_URL}/${SUB_DOMAIN}` || `https://byma-api.onrender.com/${SUB_DOMAIN}`
+}
+
 const MarketDataTable = () => {
     const [data, setData] = useState({
         investments: [],
@@ -19,8 +26,10 @@ const MarketDataTable = () => {
         qty: 0
     });
 
+    const [dollarsData, setDollarsData] = useState(null);
+
     useEffect(() => {
-        const apiUrl = process.env.REACT_APP_API_URL || 'https://byma-api.onrender.com/byma-api/summary_investments/';
+        const apiUrl = `${environment.base_api_url}/summary_investments/`;
 
         fetch(apiUrl)
             .then(response => {
@@ -38,6 +47,23 @@ const MarketDataTable = () => {
                 setError(error);
                 setLoading(false);
             });
+
+            // Fetch CCL data
+            const dollarsApiUrl = `${environment.base_api_url}/dollars?names=contadoconliqui&names=bolsa&names=blue`;
+            console.log(dollarsApiUrl);
+            fetch(dollarsApiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch CCL data');
+                    }
+                    return response.json();
+                })
+                .then(dollarsData => {
+                    setDollarsData(dollarsData);
+                })
+                .catch(error => {
+                    console.error('Error fetching CCL data:', error);
+                });
     }, []);
 
     const handleChange = (e) => {
@@ -122,22 +148,55 @@ const MarketDataTable = () => {
             <div>
                 <h2>Summary</h2>
                 <table>
+                    <thead>
+                        <tr>
+                            <th>By</th>
+                            <th>Pesos</th>
+                            <th>Dollars</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         <tr>
-                            <td>Total Invested:</td>
+                            <td>Total Invested</td>
                             <td><DataCell value={data.total_invested} type="currency" /></td>
+                            <td><DataCell value={data.total_invested_dollars} type="currency" /></td>
                         </tr>
                         <tr>
-                            <td>Total Initial Investment:</td>
+                            <td>Total Initial Investment</td>
                             <td><DataCell value={data.total_initial_investment} type="currency" /></td>
+                            <td><DataCell value={data.total_initial_investment_dollars} type="currency" /></td>
                         </tr>
                         <tr>
-                            <td>Total Revenue:</td>
+                            <td>Total Revenue</td>
                             <td><DataCell value={data.total_revenue} type="currency" /></td>
+                            <td><DataCell value={data.total_revenue_dollars} type="currency" /></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+            {dollarsData && (
+                <div>
+                    <h2>Exchange current Values</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Buy</th>
+                                <th>Sell</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {dollarsData.map((dollar, index) => (
+                                <tr key={index}>
+                                    <td>{dollar.nombre} [{dollar.moneda}]</td>
+                                    <td><DataCell value={dollar.compra} type="currency"/></td>
+                                    <td><DataCell value={dollar.venta} type="currency"/></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
         </div>
     );
 };

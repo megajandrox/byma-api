@@ -10,6 +10,7 @@ from routers.byma import router as byma_router
 from routers.cedears import router as cedears_router
 from routers.investment import router as investment_router
 from routers.ccl import router as ccl_router  # Add this line
+from routers.dolar_api import router as dollar_router  # Add this line
 
 # Create the FastAPI app
 app = FastAPI()
@@ -42,6 +43,7 @@ app.include_router(cedears_router, prefix="/byma-api")
 app.include_router(byma_router, prefix="/byma-api")
 app.include_router(investment_router, prefix="/byma-api")
 app.include_router(ccl_router, prefix="/byma-api")
+app.include_router(dollar_router, prefix="/byma-api")
 
 # Run the application
 if __name__ == "__main__":
