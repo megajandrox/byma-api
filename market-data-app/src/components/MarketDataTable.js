@@ -48,22 +48,22 @@ const MarketDataTable = () => {
                 setLoading(false);
             });
 
-            // Fetch CCL data
-            const dollarsApiUrl = `${environment.base_api_url}/dollars?names=contadoconliqui&names=bolsa&names=blue`;
-            console.log(dollarsApiUrl);
-            fetch(dollarsApiUrl)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch CCL data');
-                    }
-                    return response.json();
-                })
-                .then(dollarsData => {
-                    setDollarsData(dollarsData);
-                })
-                .catch(error => {
-                    console.error('Error fetching CCL data:', error);
-                });
+        // Fetch CCL data
+        const dollarsApiUrl = `${environment.base_api_url}/dollars?names=contadoconliqui&names=bolsa&names=blue`;
+        console.log(dollarsApiUrl);
+        fetch(dollarsApiUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch CCL data');
+                }
+                return response.json();
+            })
+            .then(dollarsData => {
+                setDollarsData(dollarsData);
+            })
+            .catch(error => {
+                console.error('Error fetching CCL data:', error);
+            });
     }, []);
 
     const handleChange = (e) => {

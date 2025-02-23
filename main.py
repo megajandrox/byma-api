@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -14,8 +16,12 @@ from routers.dolar_api import router as dollar_router  # Add this line
 
 # Create the FastAPI app
 app = FastAPI()
+origin_localhost = os.environ.get("ORIGIN_LOCALHOST", "http://localhost:3000")
+origin_production = os.environ.get("ORIGIN_PRODUCTION", None)
+
 origins = [
-    "http://localhost:3000"
+    origin_localhost,
+    origin_production
 ]
 
 @app.on_event("startup")
