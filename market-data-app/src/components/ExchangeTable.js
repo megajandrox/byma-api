@@ -1,18 +1,12 @@
 import DataCell from './DataCell';
 import React, { useEffect, useState } from 'react';
-
-const SUB_DOMAIN = 'byma-api';
-
-// Load environment variables from.env file
-const environment = {
-    base_api_url: `${process.env.REACT_APP_BASE_API_URL}/${SUB_DOMAIN}` || `https://byma-api.onrender.com/${SUB_DOMAIN}`
-}
+import URLs from '../utils/Environment';
 
 const ExchangeTable = ({ value: data }) => {
     const [dollarsData, setDollarsData] = useState(null);
     useEffect(() => {
         // Fetch Dollar data
-        const dollarsApiUrl = `${environment.base_api_url}/dollars?names=contadoconliqui&names=bolsa&names=blue`;
+        const dollarsApiUrl = `${URLs.base_api_url}/dollars?names=contadoconliqui&names=bolsa&names=blue`;
         fetch(dollarsApiUrl)
             .then(response => {
                 if (!response.ok) {
