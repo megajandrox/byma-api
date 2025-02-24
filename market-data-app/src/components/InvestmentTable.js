@@ -1,12 +1,13 @@
 import React from 'react';
 import DataCell from './DataCell';
 import AlignedCell from './AlignedCell';
-
+import Table from 'react-bootstrap/Table';
+import UpdateButton from './UpdateButton';
 const InvestmentTable = ({ value: data }) => {
     return(<>
         { data && (
             <>
-            <table>
+            <Table striped bordered hover>
                 <thead>
                     <tr>
                         <th>Symbol</th>
@@ -48,13 +49,13 @@ const InvestmentTable = ({ value: data }) => {
                                 <DataCell value={row.revenue} type="currency" />
                             </AlignedCell>
                             <AlignedCell alignment="center">
-                                <button onClick={() => console.log('Update', row)}>Update</button>
+                                <UpdateButton/>
                                 <button onClick={() => console.log('Delete', row)}>Delete</button>
                             </AlignedCell>
                     </tr>
                     ))}
                 </tbody>
-            </table>
+            </Table>
             </>
             )}
     </>);

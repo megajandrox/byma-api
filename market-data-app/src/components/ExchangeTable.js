@@ -1,6 +1,7 @@
 import DataCell from './DataCell';
 import React, { useEffect, useState } from 'react';
 import URLs from '../utils/Environment';
+import Table from 'react-bootstrap/Table';
 
 const ExchangeTable = ({ value: data }) => {
     const [dollarsData, setDollarsData] = useState(null);
@@ -25,7 +26,7 @@ const ExchangeTable = ({ value: data }) => {
         {dollarsData && (
             <>
                 <h2>Exchange current Values</h2>
-                <table>
+                <Table striped bordered hover>
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -42,7 +43,7 @@ const ExchangeTable = ({ value: data }) => {
                             </tr>
                         ))}
                     </tbody>
-                </table>
+                </Table>
             </>
         )}
     </>)

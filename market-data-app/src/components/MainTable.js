@@ -4,6 +4,7 @@ import AddInvestmentForm from './AddInvestmentForm';
 import SummaryTable from './SummaryTable';
 import ExchangeTable from './ExchangeTable';
 import URLs from '../utils/Environment';
+import LoadingSpin from './LoadingSpin';
 
 const MainTable = () => {
     const [data, setData] = useState({
@@ -51,7 +52,7 @@ const MainTable = () => {
             });
     }, []);
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <LoadingSpin />;
     if (error) return <div>Error: {error.message}</div>;
 
     return (
