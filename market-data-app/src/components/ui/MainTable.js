@@ -4,10 +4,11 @@ import AddInvestmentForm from './AddInvestmentForm';
 import SummaryTable from './SummaryTable';
 import ExchangeTable from './ExchangeTable';
 import LoadingSpin from './LoadingSpin';
-import { InvestmentContext } from '../contexts/InvestmentContext';
+import { InvestmentContext } from '../../contexts/InvestmentContext';
+import ErrorAlert from './ErrorAlert';
 
 const MainTable = () => {
-    const { data, setData, loading, error } = useContext(InvestmentContext);
+    const { setData, loading, error } = useContext(InvestmentContext);
     const [showForm, setShowForm] = useState(false);
     const [newInvestment, setNewInvestment] = useState({
         symbol: '',
@@ -30,7 +31,7 @@ const MainTable = () => {
     };
 
     if (loading) return <LoadingSpin />;
-    if (error) return <div>Error: {error.message}</div>;
+    if (error) return <ErrorAlert message={`Error: ${error.message}`}/>;
 
     return (
         <>
@@ -40,8 +41,8 @@ const MainTable = () => {
                 setShowForm={setShowForm}
                 handleChange={handleChange}
             />)}
-            <InvestmentTable value={data} />
-            <SummaryTable value={data} />
+            <InvestmentTable />
+            <SummaryTable />
             <ExchangeTable />
         </>
     );

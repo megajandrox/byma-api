@@ -1,5 +1,5 @@
 import React from 'react';
-import MainTable from './components/MainTable';
+import MainTable from './components/ui/MainTable';
 import { InvestmentProvider } from './contexts/InvestmentContext';
 import { Container } from 'react-bootstrap';
 

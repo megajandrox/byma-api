@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import DataCell from './DataCell';
+import Table from 'react-bootstrap/Table';
+import { InvestmentContext } from '../../contexts/InvestmentContext';
 
-const SummaryTable = ({ value: data }) => {
+const SummaryTable = () => {
+    const { data } = useContext(InvestmentContext);
     return(<div>
         { data && (
             <>
             <h2>Summary</h2>
-            <table>
+            <Table striped bordered hover>
                 <thead>
                     <tr>
                         <th>By</th>
@@ -31,7 +34,7 @@ const SummaryTable = ({ value: data }) => {
                         <td><DataCell value={data.total_revenue_dollars} type="currency" /></td>
                     </tr>
                 </tbody>
-            </table>
+            </Table>
             </>
             )}
     </div>);

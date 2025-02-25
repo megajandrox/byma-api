@@ -1,9 +1,9 @@
 import DataCell from './DataCell';
 import React, { useEffect, useState } from 'react';
-import URLs from '../utils/Environment';
+import URLs from '../../utils/Environment';
 import Table from 'react-bootstrap/Table';
 
-const ExchangeTable = ({ value: data }) => {
+const ExchangeTable = () => {
     const [dollarsData, setDollarsData] = useState(null);
     useEffect(() => {
         // Fetch Dollar data
