@@ -1,20 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import InvestmentTable from './InvestmentTable'
+import React, { useState, useContext } from 'react';
+import InvestmentTable from './InvestmentTable';
 import AddInvestmentForm from './AddInvestmentForm';
 import SummaryTable from './SummaryTable';
 import ExchangeTable from './ExchangeTable';
-import URLs from '../utils/Environment';
 import LoadingSpin from './LoadingSpin';
+import { InvestmentContext } from '../contexts/InvestmentContext';
 
 const MainTable = () => {
-    const [data, setData] = useState({
-        investments: [],
-        total_invested: 0,
-        total_initial_investment: 0,
-        total_revenue: 0
-    });
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const { data, setData, loading, error } = useContext(InvestmentContext);
     const [showForm, setShowForm] = useState(false);
     const [newInvestment, setNewInvestment] = useState({
         symbol: '',
@@ -22,35 +15,19 @@ const MainTable = () => {
         amount: 0.0,
         qty: 0
     });
-    
+
     const handleChange = (e) => {
         setNewInvestment({ ...newInvestment, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setData([...data, { ...newInvestment, investment_id: Date.now() }]);
+        setData(prevData => ({
+            ...prevData,
+            investments: [...prevData.investments, { ...newInvestment, investment_id: Date.now() }]
+        }));
         setShowForm(false);
     };
-
-    useEffect(() => {
-        const apiUrl = `${URLs.base_api_url}/summary_investments/`;
-        fetch(apiUrl)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                setData(data);
-                setLoading(false);
-            })
-            .catch(error => {
-                setError(error);
-                setLoading(false);
-            });
-    }, []);
 
     if (loading) return <LoadingSpin />;
     if (error) return <div>Error: {error.message}</div>;

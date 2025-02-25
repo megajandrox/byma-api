@@ -1,14 +1,15 @@
 import React from 'react';
 import MainTable from './components/MainTable';
-import './App.css';
+import { InvestmentProvider } from './contexts/InvestmentContext';
 import { Container } from 'react-bootstrap';
+
 
 function App() {
     return (
         <Container className="mt-5">
-            <div className="App">
+            <InvestmentProvider>
                 <MainTable />
-            </div>
+            </InvestmentProvider>
         </Container>
     );
 }
