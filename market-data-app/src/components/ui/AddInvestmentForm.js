@@ -1,18 +1,30 @@
 import React from 'react';
+import Form from 'react-bootstrap/Form';
+import Button from'react-bootstrap/Button';
 
-const AddInvestmentForm = ({ handleSubmit, setShowForm, handleChange}) => {
+const AddInvestmentForm = ({ handleSubmit, handleChange}) => {
     return(<>
-        <button onClick={() => setShowForm(true)}>Add Investment</button>
         <div>
             <h2>New Investment</h2>
-            <form onSubmit={handleSubmit}>
-                <input type="text" name="symbol" placeholder="Symbol" onChange={handleChange} required />
-                <input type="date" name="initial_date" onChange={handleChange} required />
-                <input type="number" name="amount" placeholder="Initial Investment" onChange={handleChange} required />
-                <input type="number" name="qty" placeholder="Quantity" onChange={handleChange} required />
-                <button type="submit">Save</button>
-                <button type="button" onClick={() => setShowForm(false)}>Cancel</button>
-            </form>
+            <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3" controlId="newInvestmentForm.symbol" onChange={handleChange} required>
+                    <Form.Label>Symbol</Form.Label>
+                    <Form.Control type="text" placeholder="APPL" />
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="newInvestmentForm.initial_date" onChange={handleChange} required>
+                    <Form.Label>Initial Date</Form.Label>
+                    <Form.Control type="date" placeholder="MM/DD/YYYY" />
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="newInvestmentForm.amount" onChange={handleChange} required>
+                    <Form.Label>Amount</Form.Label>
+                    <Form.Control type="number" placeholder="Amount" />
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="newInvestmentForm.qty" onChange={handleChange} required>
+                    <Form.Label>Quantity</Form.Label>
+                    <Form.Control type="number" placeholder="Quantity" />
+                </Form.Group>
+                <Button type="submit">Save</Button>
+            </Form>
         </div>
     </>);
 }

@@ -3,7 +3,7 @@
 * Agregar logica a update button.
 * Crear un logo.svg para el proyecto.
 * Agregar links a la columna Symbol
-* Arreglar el formulario para dar de alta nuevos investments.
+* Agregar logica para el alta nuevos investments.
 * Agregar el botton vender y lleve un estado de ganancias por ventas.
 * Que cuando se haga el summary agrupe por accion/cedear.
 * Al agregar un nuevo investment utilice la cotizacion del momento por defecto, o permita ingresar una.

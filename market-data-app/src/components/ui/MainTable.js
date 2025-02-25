@@ -6,10 +6,11 @@ import ExchangeTable from './ExchangeTable';
 import LoadingSpin from './LoadingSpin';
 import { InvestmentContext } from '../../contexts/InvestmentContext';
 import ErrorAlert from './ErrorAlert';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
 
 const MainTable = () => {
     const { setData, loading, error } = useContext(InvestmentContext);
-    const [showForm, setShowForm] = useState(false);
     const [newInvestment, setNewInvestment] = useState({
         symbol: '',
         initial_date: new Date(),
@@ -27,7 +28,6 @@ const MainTable = () => {
             ...prevData,
             investments: [...prevData.investments, { ...newInvestment, investment_id: Date.now() }]
         }));
-        setShowForm(false);
     };
 
     if (loading) return <LoadingSpin />;
@@ -36,14 +36,25 @@ const MainTable = () => {
     return (
         <>
             <h1>Mega Investment</h1>
-            {showForm && (<AddInvestmentForm
-                handleSubmit={handleSubmit}
-                setShowForm={setShowForm}
-                handleChange={handleChange}
-            />)}
-            <InvestmentTable />
-            <SummaryTable />
-            <ExchangeTable />
+            <Tabs
+            defaultActiveKey="home"
+            id="uncontrolled-tab-example"
+            className="mb-3"
+            >
+                <Tab eventKey="home" title="Investments">
+                    <InvestmentTable />
+                    <SummaryTable />
+                </Tab>
+                <Tab eventKey="exchange" title="Exchange">
+                    <ExchangeTable />
+                </Tab>
+                <Tab eventKey="new_investment" title="New Investment">
+                <AddInvestmentForm
+                    handleSubmit={handleSubmit}
+                    handleChange={handleChange}
+                />
+                </Tab>
+            </Tabs>
         </>
     );
 };
