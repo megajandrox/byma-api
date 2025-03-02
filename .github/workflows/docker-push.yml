@@ -20,7 +20,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/nombre_repositorio:latest .
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/byma:latest .
 
       - name: Push Docker image
-        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/nombre_repositorio:latest
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/byma:latest
